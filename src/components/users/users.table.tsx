@@ -34,10 +34,13 @@ export interface IUsers {
     }
   ];
   getData2: (v?: any) => void;
+  meta: object;
+  setMeta: (v?: any) => void;
+  setListUsers: (v?) => void;
 }
 
 const UsersTable = (props: IUsers) => {
-  const { data, getData2 } = props;
+  const { data, getData2, meta, setMeta, setListUsers } = props;
   const access_token = localStorage.getItem("access_token");
 
   const columns: ColumnType<null | IUsers> = [
@@ -126,6 +129,30 @@ const UsersTable = (props: IUsers) => {
     message.error("Click on No");
   };
 
+  const handleOnChange = async (page: number, pageSize: number) => {
+    // goi lai API để reload page phù hợp khi chọn page- dưa vào page + pageSize
+    const res = await fetch(
+      `http://localhost:8000/api/v1/users?current=${page}&pageSize=${pageSize}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    const data2 = await res.json();
+    if (!data2.data) {
+      notification.error({ message: JSON.stringify(data2.message) });
+    }
+    setListUsers(data2.data.result);
+    setMeta({
+      current: data2.data.meta.current,
+      pageSize: data2.data.meta.pageSize,
+      pages: data2.data.meta.pages,
+      total: data2.data.meta.total,
+    });
+  };
+
   return (
     <>
       <div
@@ -152,6 +179,13 @@ const UsersTable = (props: IUsers) => {
         dataSource={data}
         rowKey={"_id"}
         loading={false}
+        pagination={{
+          current: meta.current,
+          pageSize: meta.pageSize,
+          total: meta.total,
+          onChange: (page: number, pageSize: number) =>
+            handleOnChange(page, pageSize),
+        }}
       />
 
       <h2>Thủ công dùng table html</h2>

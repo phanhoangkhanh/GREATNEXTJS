@@ -1,48 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import ToDoAp from './todo-test/props.test'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.scss";
+import ToDoAp from "./todo-test/props.test";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   const info = {
-      name:'khanh',
-      age:33,
-      strength: {
-        learning: 100,
-        fighting: 80
-      },
-      experience : 12,
-      
-  }
+    name: "khanh",
+    age: 33,
+    strength: {
+      learning: 100,
+      fighting: 80,
+    },
+    experience: 12,
+  };
 
-  const handleTest = ( name : string) => {
-    alert(`hi em yêu ${name}`)
-  }
-  const [listToDo, setListToDo] = useState(['abc', 'edf', 'uhy', 'iuj', 'err'])
+  const handleTest = (name: string) => {
+    alert(`hi em yêu ${name}`);
+  };
+  const [listToDo, setListToDo] = useState(["abc", "edf", "uhy", "iuj", "err"]);
   return (
     <>
-    <ToDoAp 
-      variant={info} 
-      khanhFunc={handleTest}
-      listToDo={listToDo}
-      setListToDo={setListToDo}
-    />
+      <ToDoAp
+        variant={info}
+        khanhFunc={handleTest}
+        listToDo={listToDo}
+        setListToDo={setListToDo}
+      />
 
       <ul>
-        {
-            listToDo.map( item => {
-                return(
-                    <>
-                    <li>{item}</li>
-                    </>
-                )
-            })
-        }
+        {listToDo.map((item) => {
+          return (
+            <>
+              <li>{item}</li>
+            </>
+          );
+        })}
       </ul>
-      
+
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -64,7 +61,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

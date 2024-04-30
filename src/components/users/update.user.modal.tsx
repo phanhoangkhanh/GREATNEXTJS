@@ -3,7 +3,7 @@ import { Modal, Input, notification } from "antd";
 import { IUsers } from "./users.table";
 
 interface IProps {
-  access_token: string;
+  access_token: string | null;
   getData2: any;
   isUpdateModalOpen: boolean;
   setIsUpdateModalOpen: (v: boolean) => void;

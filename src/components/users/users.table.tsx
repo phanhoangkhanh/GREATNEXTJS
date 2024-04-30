@@ -19,6 +19,7 @@ import { useState } from "react";
 import CreateUserModal from "./create.user.modal";
 import { ColumnType } from "antd/es/table";
 import UpdateUserModal from "./update.user.modal";
+import CreateUserUnControlModal from "./create.user.uncontrol";
 
 export interface IUsers {
   data: [
@@ -93,6 +94,7 @@ const UsersTable = (props: IUsers) => {
 
   // code của Modal
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUnControlOpen, setIsUnControlOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [dataUpdate, setDataUpdate] = useState<null | IUsers>(null);
 
@@ -171,6 +173,13 @@ const UsersTable = (props: IUsers) => {
           >
             Add new
           </Button>
+          <Button
+            type="default"
+            icon={<PlusCircleOutlined />}
+            onClick={() => setIsUnControlOpen(true)}
+          >
+            Add new (Uncontrol)
+          </Button>
         </div>
       </div>
 
@@ -224,6 +233,13 @@ const UsersTable = (props: IUsers) => {
         setIsUpdateModalOpen={setIsUpdateModalOpen}
         dataUpdate={dataUpdate}
         setDataUpdate={setDataUpdate}
+      />
+
+      <CreateUserUnControlModal
+        access_token={access_token}
+        getData2={getData2}
+        isUnControlOpen={isUnControlOpen}
+        setIsUnControlOpen={setIsUnControlOpen}
       />
     </>
   );

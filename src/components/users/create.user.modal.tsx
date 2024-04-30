@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Modal, Input, notification } from "antd";
 
 interface IProps {
-  access_token: string;
+  access_token: string | null;
   getData2: any;
   isCreateModalOpen: boolean;
   setIsCreateModalOpen: (v: boolean) => void;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 // import "./index.css";
@@ -61,6 +61,28 @@ const Header = () => {
 
 // 1 layout lớn bên ngoài
 const LayoutAdmin = () => {
+  const getData = async () => {
+    const res = await fetch("http://localhost:8000/api/v1/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        usename: "admin@gmail.com",
+        password: "123456",
+      }),
+    });
+    const d = await res.json();
+
+    if (d.data) {
+      localStorage.setItem("access_token", d.data.access_token);
+    }
+  };
+  // TỰ ĐONG BẮN API LOOGIN ĐỂ LẤY TOKEN MỚI RỒI SAVE VÀO LOCALSTORAGE CỦA BROWSER
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div>
       <Header />

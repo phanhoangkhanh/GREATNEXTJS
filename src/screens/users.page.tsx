@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import UsersTable from "../components/users/users.table";
 
 const UserPage = () => {
+  const access_token = localStorage.getItem("access_token");
   // DINH NGHIA API
   const getData = async () => {
     const res1 = await fetch("http://localhost:8000/api/v1/auth/login", {
@@ -41,8 +42,6 @@ const UserPage = () => {
   }, []);
 
   // những api quan trong phải gửi kèm token
-  const access_token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b2tlbiBsb2dpbiIsImlzcyI6ImZyb20gc2VydmVyIiwiX2lkIjoiNjYyZjIwMTY5Yzk4NGM4ZTAyYTU1MDVkIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJhZGRyZXNzIjoiVmlldE5hbSIsImlzVmVyaWZ5Ijp0cnVlLCJuYW1lIjoiSSdtIGFkbWluIiwidHlwZSI6IlNZU1RFTSIsInJvbGUiOiJBRE1JTiIsImdlbmRlciI6Ik1BTEUiLCJhZ2UiOjY5LCJpYXQiOjE3MTQ0NDUxNzcsImV4cCI6MTgwMDg0NTE3N30.RhwxH6U_mUvsz8yxCCtGyfmsVnQIDFRhRRF6uKswUbc";
   return (
     <div>
       <UsersTable data={listUsers} getData2={getData2} />

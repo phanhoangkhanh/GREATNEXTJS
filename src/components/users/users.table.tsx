@@ -1,4 +1,13 @@
-import { Button, Table, Modal, Input, notification } from "antd";
+import {
+  Button,
+  Table,
+  Modal,
+  Input,
+  notification,
+  PopconfirmProps,
+  message,
+  Popconfirm,
+} from "antd";
 import {
   AppstoreOutlined,
   MailOutlined,
@@ -29,6 +38,7 @@ export interface IUsers {
 
 const UsersTable = (props: IUsers) => {
   const { data, getData2 } = props;
+  const access_token = localStorage.getItem("access_token");
 
   const columns: ColumnType<null | IUsers> = [
     {
@@ -60,6 +70,18 @@ const UsersTable = (props: IUsers) => {
             >
               Edit
             </button>
+            <Popconfirm
+              title="Delete the USER"
+              description={`Are you sure to delete ${record.name}`}
+              onConfirm={() => confirm(record)}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger style={{ marginLeft: "20px" }}>
+                Delete
+              </Button>
+            </Popconfirm>
           </div>
         );
       },
@@ -71,8 +93,38 @@ const UsersTable = (props: IUsers) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [dataUpdate, setDataUpdate] = useState<null | IUsers>(null);
 
-  const access_token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b2tlbiBsb2dpbiIsImlzcyI6ImZyb20gc2VydmVyIiwiX2lkIjoiNjYyZjIwMTY5Yzk4NGM4ZTAyYTU1MDVkIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJhZGRyZXNzIjoiVmlldE5hbSIsImlzVmVyaWZ5Ijp0cnVlLCJuYW1lIjoiSSdtIGFkbWluIiwidHlwZSI6IlNZU1RFTSIsInJvbGUiOiJBRE1JTiIsImdlbmRlciI6Ik1BTEUiLCJhZ2UiOjY5LCJpYXQiOjE3MTQ0NDUxNzcsImV4cCI6MTgwMDg0NTE3N30.RhwxH6U_mUvsz8yxCCtGyfmsVnQIDFRhRRF6uKswUbc";
+  // PHAN POPCONFIRM
+  const confirm: PopconfirmProps["onConfirm"] = async (user: IUsers) => {
+    const res = await fetch(`http://localhost:8000/api/v1/users/${user._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    const d = await res.json();
+    if (d.data) {
+      // Nếu api bắn thành công lấy 1 hàm từ cha truyền qua prop để rerender lại list danh sách
+      await getData2();
+      notification.success({
+        message: "ok nhé",
+      });
+    } else {
+      notification.error({
+        description: "something is wrong",
+        message: JSON.stringify(d.message),
+      });
+      return;
+    }
+
+    message.success("Click on Yes");
+  };
+
+  const cancel: PopconfirmProps["onCancel"] = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
 
   return (
     <>

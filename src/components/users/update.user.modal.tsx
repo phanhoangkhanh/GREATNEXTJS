@@ -41,21 +41,22 @@ const UpdateUserModal = (props: IProps) => {
   }, [dataUpdate]);
 
   const handleOk = async () => {
+    const data = {
+      _id: dataUpdate?._id,
+      name,
+      age,
+      email,
+      gender,
+      role,
+      address,
+    };
     const res = await fetch("http://localhost:8000/api/v1/users", {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${access_token}`,
       },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        age,
-        gender,
-        role,
-        address,
-      }),
+      body: JSON.stringify(data),
     });
     const d = await res.json();
     // test loi dưa tren cau truc respond của API + notification của ant
@@ -65,7 +66,7 @@ const UpdateUserModal = (props: IProps) => {
       notification.success({
         message: "ok nhé",
       });
-      handleCloseCreateModal();
+      handleCloseUpdateModal();
     } else {
       notification.error({
         description: "something is wrong",
@@ -75,7 +76,7 @@ const UpdateUserModal = (props: IProps) => {
     }
   };
 
-  const handleCloseCreateModal = () => {
+  const handleCloseUpdateModal = () => {
     setIsUpdateModalOpen(false);
     setName("");
     setEmail("");
@@ -108,6 +109,7 @@ const UpdateUserModal = (props: IProps) => {
         <div>
           <label>Password</label>
           <Input
+            disabled={true}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

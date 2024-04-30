@@ -1,4 +1,4 @@
-import { Button, Table, Modal } from "antd";
+import { Button, Table, Modal, Input, notification } from "antd";
 import {
   AppstoreOutlined,
   MailOutlined,
@@ -7,14 +7,30 @@ import {
   PlusCircleOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
+import CreateUserModal from "./create.user.modal";
+import { ColumnType } from "antd/es/table";
+import UpdateUserModal from "./update.user.modal";
 
-interface IUsers {
-  data: [{ email: string; name: string; role: string }];
+export interface IUsers {
+  data: [
+    {
+      email: string;
+      name: string;
+      role: string;
+      _id: string;
+      address: string;
+      gender: string;
+      password: string;
+      age: number;
+    }
+  ];
+  getData2: (v?: any) => void;
 }
-const UsersTable = (props: IUsers) => {
-  const { data } = props;
 
-  const columns: IUsers = [
+const UsersTable = (props: IUsers) => {
+  const { data, getData2 } = props;
+
+  const columns: ColumnType<null | IUsers> = [
     {
       title: "Email",
       dataIndex: "email",
@@ -30,22 +46,34 @@ const UsersTable = (props: IUsers) => {
       title: "Role",
       dataIndex: "role",
     },
+    {
+      title: "Action",
+      // record chính là bản ghi 1 item của row tương dương
+      render: (value, record) => {
+        return (
+          <div>
+            <button
+              onClick={() => {
+                setDataUpdate(record);
+                setIsUpdateModalOpen(true);
+              }}
+            >
+              Edit
+            </button>
+          </div>
+        );
+      },
+    },
   ];
 
   // code của Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState<null | IUsers>(null);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  const access_token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b2tlbiBsb2dpbiIsImlzcyI6ImZyb20gc2VydmVyIiwiX2lkIjoiNjYyZjIwMTY5Yzk4NGM4ZTAyYTU1MDVkIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJhZGRyZXNzIjoiVmlldE5hbSIsImlzVmVyaWZ5Ijp0cnVlLCJuYW1lIjoiSSdtIGFkbWluIiwidHlwZSI6IlNZU1RFTSIsInJvbGUiOiJBRE1JTiIsImdlbmRlciI6Ik1BTEUiLCJhZ2UiOjY5LCJpYXQiOjE3MTQ0NDUxNzcsImV4cCI6MTgwMDg0NTE3N30.RhwxH6U_mUvsz8yxCCtGyfmsVnQIDFRhRRF6uKswUbc";
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   return (
     <>
       <div
@@ -60,14 +88,19 @@ const UsersTable = (props: IUsers) => {
           <Button
             type="primary"
             icon={<PlusCircleOutlined />}
-            onClick={showModal}
+            onClick={() => setIsCreateModalOpen(true)}
           >
             Add new
           </Button>
         </div>
       </div>
 
-      <Table columns={columns} dataSource={data} rowKey={"_id"} />
+      <Table
+        columns={columns}
+        dataSource={data}
+        rowKey={"_id"}
+        loading={false}
+      />
 
       <h2>Thủ công dùng table html</h2>
       <table>
@@ -91,16 +124,21 @@ const UsersTable = (props: IUsers) => {
         </tbody>
       </table>
 
-      <Modal
-        title="Basic Modal"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
+      <CreateUserModal
+        access_token={access_token}
+        getData2={getData2}
+        isCreateModalOpen={isCreateModalOpen}
+        setIsCreateModalOpen={setIsCreateModalOpen}
+      />
+
+      <UpdateUserModal
+        access_token={access_token}
+        getData2={getData2}
+        isUpdateModalOpen={isUpdateModalOpen}
+        setIsUpdateModalOpen={setIsUpdateModalOpen}
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
+      />
     </>
   );
 };

@@ -31,7 +31,7 @@ const items: MenuItem[] = [
   },
   {
     label: <Link to="/users">Manager User</Link>,
-    key: "users",
+    key: "/users",
     icon: <UserOutlined />,
   },
   {

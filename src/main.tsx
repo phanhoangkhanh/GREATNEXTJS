@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
@@ -15,10 +16,12 @@ import {
   SettingOutlined,
   HomeOutlined,
   UserOutlined,
+  QqOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import "./App.scss";
+import TracksPage from "./app/tracks/page.tsx";
 
 // PHẦN HEADER THEO ANT
 type MenuItem = Required<MenuProps>["items"][number];
@@ -33,6 +36,11 @@ const items: MenuItem[] = [
     label: <Link to="/users">Manager User</Link>,
     key: "/users",
     icon: <UserOutlined />,
+  },
+  {
+    label: <Link to="/users">Manager Tracks</Link>,
+    key: "/tracks",
+    icon: <QqOutlined />,
   },
   {
     label: <Link to="/test">Test</Link>,
@@ -50,29 +58,34 @@ const Header = () => {
   };
 
   return (
-    <Menu
-      onClick={onClick}
-      selectedKeys={[current]}
-      mode="horizontal"
-      items={items}
-    />
+    <>
+      <Menu
+        onClick={onClick}
+        selectedKeys={[current]}
+        mode="horizontal"
+        items={items}
+      />
+      <TracksPage />
+    </>
   );
 };
 
 // 1 layout lớn bên ngoài
 const LayoutAdmin = () => {
   const getData = async () => {
+    // LƯU LAI ACCESS_TOKEN ĐỂ SỬ DỤNG CHO NHIỀU LẦN - LÀM BEARE GẮN VÀO HEADER
     const res = await fetch("http://localhost:8000/api/v1/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        usename: "admin@gmail.com",
+        username: "admin@gmail.com",
         password: "123456",
       }),
     });
     const d = await res.json();
+    console.log("data", d);
 
     if (d.data) {
       localStorage.setItem("access_token", d.data.access_token);
